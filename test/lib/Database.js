@@ -30,7 +30,7 @@ module.exports.open = function(test, common) {
     // open connection
     db.open('/tmp/db', { test: true });
     t.equal( db.db.constructor.name, 'Database' );
-    t.deepEqual( db.db, {
+    t.deepLooseEqual( db.db, {
       inTransaction: false,
       open: true,
       memory: true,
@@ -95,7 +95,7 @@ module.exports.prepare = function(test, common) {
 
     t.true(typeof db.stmt, 'object');
     t.true(db.stmt.hasOwnProperty(sql));
-    t.deepEqual(db.stmt[sql], {
+    t.deepLooseEqual(db.stmt[sql], {
       reader: true,
       readonly: true,
       source: 'SELECT * FROM sqlite_master',
