@@ -103,8 +103,8 @@ function insertWofRecord( wof, next ){
     // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/799
     const hasDeadOrObscureLanguages = _.has(wof, 'name:vol_x_preferred');
     const isLowOrUnknownPopulation = _.get(doc, 'population', 0) < LOW_POPULATION_THRESHOLD;
-    const isMegaCity = _.get(doc, 'wof:megacity', 0) === 1;
-    const isCapitalCity = !_.isEmpty(_.get(doc, 'wof:capital_of'));
+    const isMegaCity = _.get(wof, 'wof:megacity', 0) === 1;
+    const isCapitalCity = !_.isEmpty(_.get(wof, 'wof:capital_of'));
     const isLikelyTransliterated = (
       hasDeadOrObscureLanguages && isLowOrUnknownPopulation && !isMegaCity && !isCapitalCity
     );

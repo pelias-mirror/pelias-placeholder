@@ -942,6 +942,34 @@ module.exports.add_names = function(test, util) {
     });
   });
 
+  // isLikelyTransliterated: megacity flag (read from the raw wof record, not the
+  // partially-built doc) should rescue names from being dropped
+  test( 'store: do not reject likely-transliterated names for megacities', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:vol_x_preferred': [ 'Example' ],
+      'name:eng_x_preferred': [ 'Big City' ],
+      'wof:megacity': 1
+    }), function(){
+      t.ok( mock._calls.setTokens[0][1].length > 0 );
+      t.end();
+    });
+  });
+
+  // isLikelyTransliterated: capital_of flag (read from the raw wof record, not the
+  // partially-built doc) should rescue names from being dropped
+  test( 'store: do not reject likely-transliterated names for capital cities', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'name:vol_x_preferred': [ 'Example' ],
+      'name:eng_x_preferred': [ 'Capital City' ],
+      'wof:capital_of': [ 123 ]
+    }), function(){
+      t.ok( mock._calls.setTokens[0][1].length > 0 );
+      t.end();
+    });
+  });
+
   // do not store tokens for the 'empire' placetype
   test( 'empire tokens excluded', function(t) {
     var mock = new Mock();

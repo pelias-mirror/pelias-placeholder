@@ -1,6 +1,6 @@
 .properties | with_entries(
   select(.key | test(
-    "^(wof:(id|name|placetype|hierarchy|parent_id|country_alpha3|abbreviation|shortcode|superseded_by|label|population|megacity)$|" +
+    "^(wof:(id|name|placetype|hierarchy|parent_id|country_alpha3|abbreviation|shortcode|superseded_by|label|population|megacity|capital_of)$|" +
     "lbl:(bbox|latitude|longitude)$|" +
     "geom:(area|bbox|latitude|longitude)$|" +
     "iso:(country)$|" +
