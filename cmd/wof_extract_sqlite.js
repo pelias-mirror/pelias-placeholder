@@ -1,11 +1,11 @@
 const path = require('path');
 const fs = require('fs');
+const { Readable } = require('stream');
 const whosonfirst = require('pelias-whosonfirst');
 const config = require('pelias-config').generate().imports.whosonfirst;
 const SQLiteStream = whosonfirst.SQLiteStream;
 const through = require('through2');
 const Placeholder = require('../Placeholder');
-const combinedStream = require('combined-stream');
 const wof = require('../prototype/wof');
 const buildDescendantPopulationIndex = require('../lib/descendantPopulationIndex');
 
@@ -58,17 +58,18 @@ const output = () => {
   }
 };
 
-const sqliteStream = combinedStream.create();
-dbFiles.forEach(dbPath => {
-  sqliteStream.append(next => {
-    next(new SQLiteStream(
+async function* generateRecords() {
+  for (const dbPath of dbFiles) {
+    yield* new SQLiteStream(
       dbPath,
       config.importPlace ?
       SQLiteStream.findGeoJSONByPlacetypeAndWOFId(layers, config.importPlace) :
       SQLiteStream.findGeoJSONByPlacetype(layers)
-    ));
-  });
-});
+    );
+  }
+}
+
+const sqliteStream = Readable.from(generateRecords(), { objectMode: true });
 
 sqliteStream
   .pipe(whosonfirst.toJSONStream())
