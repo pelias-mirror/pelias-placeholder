@@ -7,6 +7,7 @@ const blacklist = require('pelias-blacklist-stream/loader')();
 const analysis = require('../lib/analysis');
 const language = dir('../config/language');
 const LOW_POPULATION_THRESHOLD = 2000;
+const getDefaultName = require('pelias-whosonfirst').getDefaultName;
 
 // synthetic property injected by cmd/wof_extract_sqlite.js (see lib/descendantPopulationIndex.js)
 // carrying the highest population found among a record's WOF descendants, since many admin
@@ -34,7 +35,7 @@ function insertWofRecord( wof, next ){
 
   const doc = {
     id: id,
-    name: wof['wof:label'] || wof['wof:name'],
+    name: getDefaultName( wof ),
     abbr: getAbbreviation( wof ),
     placetype: wof['wof:placetype'],
     rank: getRank( wof['wof:placetype'] ),
