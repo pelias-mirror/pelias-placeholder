@@ -127,6 +127,62 @@ module.exports.store_default_name = function(test, util) {
       t.end();
     });
   });
+
+  test( 'name: US county uses longname per configuration', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'iso:country': 'US',
+      'wof:placetype': 'county',
+      'wof:name': 'Kings',
+      'name:eng_x_preferred': ['Kings'],
+      'label:eng_x_preferred_longname': ['Kings County']
+    }), function(){
+      t.deepEqual( mock._calls.set[0][1].name, 'Kings County' );
+      t.end();
+    });
+  });
+
+  test( 'name: US county falls back to qs:a2_alt when no longname is present', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'iso:country': 'US',
+      'wof:placetype': 'county',
+      'wof:name': 'Kings',
+      'qs:a2_alt': 'Kings County (from qs:a2_alt)'
+    }), function(){
+      t.deepEqual( mock._calls.set[0][1].name, 'Kings County (from qs:a2_alt)' );
+      t.end();
+    });
+  });
+
+  test( 'name: longname is NOT used outside the qualifier-preferred allowlist ' +
+    '(eg. Greater London stays Greater London, not the ceremonial-county longname)', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'iso:country': 'GB',
+      'wof:placetype': 'macrocounty',
+      'wof:name': 'Greater London',
+      'name:eng_x_preferred': ['Greater London'],
+      'label:eng_x_preferred_longname': ['Greater London Ceremonial County']
+    }), function(){
+      t.deepEqual( mock._calls.set[0][1].name, 'Greater London' );
+      t.end();
+    });
+  });
+
+  test( 'name: French county uses longname too (non-English-official-language allowlist entry)', function(t) {
+    var mock = new Mock();
+    mock.insertWofRecord(params({
+      'iso:country': 'FR',
+      'wof:placetype': 'county',
+      'wof:name': 'Montmarault',
+      'name:eng_x_preferred': ['Montmarault'],
+      'label:eng_x_preferred_longname': ['Montmarault Canton']
+    }), function(){
+      t.deepEqual( mock._calls.set[0][1].name, 'Montmarault Canton' );
+      t.end();
+    });
+  });
 };
 
 module.exports.store_abbr = function(test, util) {

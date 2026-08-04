@@ -1,6 +1,6 @@
 .properties | with_entries(
   select(.key | test(
-    "^(wof:(id|name|placetype|hierarchy|parent_id|country_alpha3|abbreviation|shortcode|superseded_by|label|population|megacity|capital_of)$|" +
+    "^(wof:(id|name|placetype|hierarchy|parent_id|country|country_alpha3|abbreviation|shortcode|superseded_by|label|population|megacity|capital_of|lang_x_official)$|" +
     "lbl:(bbox|latitude|longitude)$|" +
     "geom:(area|bbox|latitude|longitude)$|" +
     "iso:(country)$|" +
@@ -9,11 +9,12 @@
     "mz:(is_current|population)$|" +
     "gn:(population|pop)$|" +
     "zs:(pop10)$|" +
-    "qs:(pop|gn_pop|photo_sum)$|" +
+    "qs:(pop|gn_pop|photo_sum|a2_alt)$|" +
     "wk:(population)$|" +
     "meso:(pop)$|" +
     "statoids:(population)$|" +
     "name:|" +
+    "label:|" +
     "abrv:)"
   ))
 )
